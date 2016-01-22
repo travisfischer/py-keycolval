@@ -1,0 +1,269 @@
+This code test has 4 levels of difficulty, each level builds on the work done in the previous level.
+
+
+For this code test, you will implement a key/column/value store. A key column value store is
+
+similar to a nested hash table, with the following requirements:
+
+    * like a hash table, a key can only occur once
+
+    * within a given key, a column cannot appear more than once, like a hash table
+
+    * when querying the contents of a key, a list of column/value tuples are returned, sorted by column
+
+    * all keys, columns, and values will be strings of variable length
+
+    * errors shouldn't be raised if a nonexistent key/column is accessed,
+
+        empty lists / None values should be returned
+
+
+level 1:
+
+    write a class that gets, sets, and deletes keys, columns, and values, iterate over
+
+    keys, return columns in order by implementing the class defined below
+
+    you should design your implementation with the assumption that reads will be much
+
+    more frequent than writes
+
+
+    class KeyColumnValueStore(object):
+
+
+
+        def set(self, key, col, val):
+
+            """ sets the value at the given key/column """
+
+
+
+        def get(self, key, col):
+
+            """ return the value at the specified key/column """
+
+
+
+        def get_key(self, key):
+
+            """ returns a sorted list of column/value tuples """
+
+
+
+        def get_keys(self):
+
+            """ returns a set containing all of the keys in the store """
+
+
+
+        def delete(self, key, col):
+
+            """ removes a column/value from the given key """
+
+
+
+        def delete_key(self, key):
+
+            """ removes all data associated with the given key """
+
+
+
+    example:
+
+    # given this store and dataset
+
+    store = KeyColumnValueStore()
+
+    store.set('a', 'aa', 'x')
+
+    store.set('a', 'ab', 'x')
+
+    store.set('c', 'cc', 'x')
+
+    store.set('c', 'cd', 'x')
+
+    store.set('d', 'de', 'x')
+
+    store.set('d', 'df', 'x'
+
+
+
+    # the statements below will evaluate to True
+
+    store.get('a', 'aa') == 'x'
+
+    store.get_key('a') == [('aa', 'x'), ('ab', 'x')]
+
+
+
+    # nonexistent keys/columns, the statements below
+
+    # will evaluate to True
+
+    store.get('z', 'yy') is None
+
+    store.get('z') == []
+
+
+
+    # if we set different values on the 'a' key:
+
+    store.set('a', 'aa', 'y')
+
+    store.set('a', 'ab', 'z')
+
+
+
+    # the statements below will evaluate to True
+
+    store.get('a', 'aa') == 'y'
+
+    store.get_key('a') == [('aa', 'y'), ('ab', 'z')]
+
+
+
+    # deleting
+
+    store.delete('d', 'df')
+
+
+
+    # this will evaluate to True
+
+    store.get_key('d') == [('de', 'x')]
+
+
+
+    # delete an entire key
+
+    store.delete_key('c')
+
+
+
+    # this will evaluate to True
+
+    store.get_key('c') == []
+
+
+
+
+
+level 2:
+
+    add a method that takes slices of a key
+
+
+
+    you should design your implementation with the assumption that getting slices will be the
+
+    most frequently performed operation
+
+
+
+    class KeyColumnValueStore(object):
+
+
+
+        # .. other methods ..
+
+
+
+        def get_slice(self, key, start, stop):
+
+            """
+
+            returns a sorted list of column/value tuples where the column
+
+            values are between the start and stop values, inclusive of the
+
+            start and stop values. Start and/or stop can be None values,
+
+            leaving the slice open ended in that direction
+
+            """
+
+
+
+    example:
+
+    # given this store and dataset
+
+    store.set('a', 'aa', 'x')
+
+    store.set('a', 'ab', 'x')
+
+    store.set('a', 'ac', 'x')
+
+    store.set('a', 'ad', 'x')
+
+    store.set('a', 'ae', 'x')
+
+    store.set('a', 'af', 'x')
+
+    store.set('a', 'ag', 'x')
+
+
+
+    # the following statements will evaluate to True
+
+    store.get_slice('a', 'ac', 'ae') == [('ac', 'x'), ('ad', 'x'), ('ae', 'x')]
+
+    store.get_slice('a', 'ae', None) == [('ae', 'x'), ('af', 'x'), ('ag', 'x')]
+
+    store.get_slice('a', None, 'ac') == [('aa', 'x'), ('ab', 'x'), ('ac', 'x')]
+
+
+
+level 3:
+
+    add support for persisting the data to disk, all queries and operations should
+
+    still be done in memory, but it needs to be persisted to disk, and needs to
+
+    support loading a dataset from disk
+
+
+
+    tests checking for persistence function will instantiate the class with a path kwarg, like so
+
+    store = KeyColumnValueStore(path='/tmp/codetestdata')
+
+
+
+    there is no save, close, or shutdown method that will be called
+
+
+
+level 4:
+
+    implement a rest server that interfaces with level 3 and supports all of the operations
+
+    described above. You are free to use a framework if you like
+
+
+
+
+
+a few notes about the test:
+
+    * in addition to running our test suite against your submission, we will also be evaluating your code for the following:
+
+        * instructions have been understood and followed
+
+        * data structure selection
+
+        * planning
+
+        * testing
+
+        * overall approach and style
+
+    * you are free to use 3rd party libraries in your implementation, so long as they assist you in your implementation and
+
+        don't do the work for you (ie: data structure libs and web frameworks are ok, key column value store libraries are not).
+
+        If you use any third party libraries in your implementation, please include a requirements.txt file
+
+
+
